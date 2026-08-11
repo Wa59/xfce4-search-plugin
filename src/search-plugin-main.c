@@ -65,7 +65,7 @@ void search_plugin_construct(XfcePanelPlugin *plugin)
     gtk_window_set_position(GTK_WINDOW(popup_window), GTK_WIN_POS_NONE);
 
     scrolled_window = gtk_scrolled_window_new(NULL, NULL);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_container_add(GTK_CONTAINER(popup_window), scrolled_window);
 
     store = gtk_list_store_new(SEARCH_PLUGIN_COLUMN_COUNT, G_TYPE_STRING, G_TYPE_POINTER, GDK_TYPE_PIXBUF, G_TYPE_STRING);
@@ -86,6 +86,8 @@ void search_plugin_construct(XfcePanelPlugin *plugin)
     g_object_set(renderer, "xpad", SEARCH_PLUGIN_CELL_PADDING_X, "ypad", SEARCH_PLUGIN_CELL_PADDING_Y, NULL);
     column = gtk_tree_view_column_new_with_attributes("Result", renderer, "text", SEARCH_PLUGIN_COLUMN_TITLE, NULL);
     gtk_tree_view_column_set_cell_data_func(column, renderer, search_plugin_style_first_row, NULL, NULL);
+    gtk_tree_view_column_set_expand(column, FALSE);
+    gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
     gtk_container_add(GTK_CONTAINER(scrolled_window), tree_view);
     data->popup_list = tree_view;
@@ -93,7 +95,7 @@ void search_plugin_construct(XfcePanelPlugin *plugin)
     GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree_view));
     gtk_tree_selection_set_mode(selection, GTK_SELECTION_NONE);
 
-    gtk_widget_set_size_request(tree_view, SEARCH_PLUGIN_TREE_VIEW_WIDTH, SEARCH_PLUGIN_TREE_VIEW_HEIGHT);
+    gtk_widget_set_size_request(tree_view, data->popup_width, SEARCH_PLUGIN_TREE_VIEW_HEIGHT);
     gtk_widget_hide(popup_window);
     gtk_widget_set_name(popup_window, "xfce-search-popup");
     gtk_widget_add_events(popup_window, GDK_BUTTON_PRESS_MASK);
