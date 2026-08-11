@@ -74,7 +74,7 @@ void search_plugin_construct(XfcePanelPlugin *plugin)
     gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree_view), FALSE);
 
     renderer = gtk_cell_renderer_pixbuf_new();
-    g_object_set(renderer, "xpad", 7, "ypad", 10, NULL);
+    g_object_set(renderer, "xpad", SEARCH_PLUGIN_CELL_PADDING_X, "ypad", SEARCH_PLUGIN_CELL_PADDING_Y, NULL);
     column = gtk_tree_view_column_new();
     gtk_tree_view_column_set_title(column, "Icon");
     gtk_tree_view_column_pack_start(column, renderer, FALSE);
@@ -83,7 +83,7 @@ void search_plugin_construct(XfcePanelPlugin *plugin)
     gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
 
     renderer = gtk_cell_renderer_text_new();
-    g_object_set(renderer, "xpad", 7, "ypad", 10, NULL);
+    g_object_set(renderer, "xpad", SEARCH_PLUGIN_CELL_PADDING_X, "ypad", SEARCH_PLUGIN_CELL_PADDING_Y, NULL);
     column = gtk_tree_view_column_new_with_attributes("Result", renderer, "text", SEARCH_PLUGIN_COLUMN_TITLE, NULL);
     gtk_tree_view_column_set_cell_data_func(column, renderer, search_plugin_style_first_row, NULL, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
