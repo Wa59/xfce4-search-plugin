@@ -253,6 +253,25 @@ void search_plugin_handle_row_activation(GtkTreeView *tree_view,
     }
 }
 
+gboolean
+search_plugin_handle_row_click(GtkWidget *widget,
+                               GdkEventButton *event,
+                               SearchPluginData *data)
+{
+    if (event == NULL || event->type != GDK_BUTTON_PRESS || event->button != GDK_BUTTON_PRIMARY || data == NULL)
+        return FALSE;
+
+    GtkTreePath *path = NULL;
+    if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(widget), (gint) event->x, (gint) event->y, &path, NULL, NULL, NULL))
+    {
+        search_plugin_handle_row_activation(GTK_TREE_VIEW(widget), path, NULL, data);
+        gtk_tree_path_free(path);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 gboolean search_plugin_focus_entry_on_click(GtkWidget *widget,
                                              GdkEventButton *event,
                                              SearchPluginData *data)

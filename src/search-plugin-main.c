@@ -90,6 +90,9 @@ void search_plugin_construct(XfcePanelPlugin *plugin)
     gtk_container_add(GTK_CONTAINER(scrolled_window), tree_view);
     data->popup_list = tree_view;
 
+    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree_view));
+    gtk_tree_selection_set_mode(selection, GTK_SELECTION_NONE);
+
     gtk_widget_set_size_request(tree_view, SEARCH_PLUGIN_TREE_VIEW_WIDTH, SEARCH_PLUGIN_TREE_VIEW_HEIGHT);
     gtk_widget_hide(popup_window);
     gtk_widget_set_name(popup_window, "xfce-search-popup");
@@ -107,6 +110,7 @@ void search_plugin_construct(XfcePanelPlugin *plugin)
     g_signal_connect(search_entry, "changed", G_CALLBACK(search_plugin_handle_entry_change), data);
     g_signal_connect(search_entry, "focus-out-event", G_CALLBACK(search_plugin_handle_focus_out), data);
     g_signal_connect(search_entry, "key-press-event", G_CALLBACK(search_plugin_handle_entry_key), data);
+    g_signal_connect(tree_view, "button-press-event", G_CALLBACK(search_plugin_handle_row_click), data);
     g_signal_connect(tree_view, "row-activated", G_CALLBACK(search_plugin_handle_row_activation), data);
     g_signal_connect_swapped(plugin, "destroy", G_CALLBACK(search_plugin_free_plugin_data), data);
     g_signal_connect(plugin, "configure-plugin", G_CALLBACK(search_plugin_show_options_dialog), data);

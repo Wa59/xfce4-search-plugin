@@ -7,7 +7,7 @@
 #include <libxfce4panel/xfce-panel-plugin.h>
 
 #define SEARCH_PLUGIN_ENTRY_MARGIN 2
-#define SEARCH_PLUGIN_ENTRY_WIDTH 220
+#define SEARCH_PLUGIN_ENTRY_WIDTH 200
 #define SEARCH_PLUGIN_ENTRY_HEIGHT -1
 
 #define SEARCH_PLUGIN_POPUP_WIDTH 320
@@ -89,6 +89,10 @@ void search_plugin_handle_row_activation(GtkTreeView *tree_view,
                                          GtkTreePath *path,
                                          GtkTreeViewColumn *column,
                                          SearchPluginData *data);
+
+gboolean search_plugin_handle_row_click(GtkWidget *widget,
+                                        GdkEventButton *event,
+                                        SearchPluginData *data);
 
 gboolean search_plugin_focus_entry_on_click(GtkWidget *widget,
                                              GdkEventButton *event,
