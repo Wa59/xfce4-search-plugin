@@ -1,0 +1,10 @@
+[Xfce Panel]
+Type=X-XFCE-PanelPlugin
+Encoding=UTF-8
+Name=Search
+Comment=Search apps and settings from the panel
+Icon=edit-find-symbolic
+X-XFCE-Module=search-plugin
+X-XFCE-Unique=true
+X-XFCE-Internal=false
+X-XFCE-API=2.0
