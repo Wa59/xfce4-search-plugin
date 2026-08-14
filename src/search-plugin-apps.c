@@ -402,10 +402,12 @@ void search_plugin_refresh_popup(SearchPluginData *data)
         return;
     }
 
+    gint result_count = 0;
+    const gint MAX_RESULTS = 20;
     GList *app_infos = g_app_info_get_all();
     gboolean found_match = FALSE;
 
-    for (GList *iter = app_infos; iter != NULL; iter = iter->next)
+    for (GList *iter = app_infos; iter != NULL && result_count < MAX_RESULTS; iter = iter->next)
     {
         GAppInfo *app_info = G_APP_INFO(iter->data);
         if (!g_app_info_should_show(app_info) || !G_IS_DESKTOP_APP_INFO(app_info))
@@ -419,21 +421,23 @@ void search_plugin_refresh_popup(SearchPluginData *data)
             if (pixbuf != NULL)
                 g_object_unref(pixbuf);
             found_match = TRUE;
+            result_count++;
         }
     }
 
     g_list_free_full(app_infos, g_object_unref);
 
     GList *history_matches = search_plugin_find_fish_history_commands(query);
-    if (history_matches != NULL)
+    if (history_matches != NULL && result_count < MAX_RESULTS)
     {
         GtkIconTheme *theme = gtk_icon_theme_get_default();
         GdkPixbuf *pixbuf = gtk_icon_theme_load_icon(theme, "document-open-recent", SEARCH_PLUGIN_ICON_SIZE, GTK_ICON_LOOKUP_FORCE_SIZE, NULL);
-        for (GList *iter = history_matches; iter != NULL; iter = iter->next)
+        for (GList *iter = history_matches; iter != NULL && result_count < MAX_RESULTS; iter = iter->next)
         {
             const gchar *command = iter->data;
             search_plugin_add_result(store, command, NULL, command, pixbuf);
             found_match = TRUE;
+            result_count++;
         }
         if (pixbuf != NULL)
             g_object_unref(pixbuf);
@@ -441,15 +445,16 @@ void search_plugin_refresh_popup(SearchPluginData *data)
     }
 
     GList *path_matches = search_plugin_find_path_commands(query);
-    if (path_matches != NULL)
+    if (path_matches != NULL && result_count < MAX_RESULTS)
     {
         GtkIconTheme *theme = gtk_icon_theme_get_default();
         GdkPixbuf *pixbuf = gtk_icon_theme_load_icon(theme, "system-run-symbolic", SEARCH_PLUGIN_ICON_SIZE, GTK_ICON_LOOKUP_FORCE_SIZE, NULL);
-        for (GList *iter = path_matches; iter != NULL; iter = iter->next)
+        for (GList *iter = path_matches; iter != NULL && result_count < MAX_RESULTS; iter = iter->next)
         {
             const gchar *command = iter->data;
             search_plugin_add_result(store, command, NULL, command, pixbuf);
             found_match = TRUE;
+            result_count++;
         }
         if (pixbuf != NULL)
             g_object_unref(pixbuf);
