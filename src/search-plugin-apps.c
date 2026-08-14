@@ -464,8 +464,39 @@ void search_plugin_refresh_popup(SearchPluginData *data)
     if (!found_match)
     {
         GtkIconTheme *theme = gtk_icon_theme_get_default();
-        GdkPixbuf *pixbuf = gtk_icon_theme_load_icon(theme, "system-run-symbolic", SEARCH_PLUGIN_ICON_SIZE, GTK_ICON_LOOKUP_FORCE_SIZE, NULL);
-        search_plugin_add_result(store, g_strdup_printf("Run: %s", query), NULL, query, pixbuf);
+
+        // Check if first word is a valid command in PATH
+        gchar **parts = g_strsplit(query, " ", 2);
+        gchar *first_word = parts[0];
+        gboolean is_command = FALSE;
+        
+        if (first_word != NULL && first_word[0] != '\0')
+        {
+            const gchar *path_env = g_getenv("PATH");
+            if (path_env != NULL)
+            {
+                gchar **path_dirs = g_strsplit(path_env, ":", -1);
+                for (gint i = 0; path_dirs[i] != NULL; i++)
+                {
+                    gchar *full_path = g_build_filename(path_dirs[i], first_word, NULL);
+                    if (g_file_test(full_path, G_FILE_TEST_IS_EXECUTABLE))
+                    {
+                        is_command = TRUE;
+                        g_free(full_path);
+                        break;
+                    }
+                    g_free(full_path);
+                }
+                g_strfreev(path_dirs);
+            }
+        }
+        
+        GdkPixbuf *pixbuf = gtk_icon_theme_load_icon(theme, ( is_command ? "system-run-symbolic" : "system-search-symbolic"), SEARCH_PLUGIN_ICON_SIZE, GTK_ICON_LOOKUP_FORCE_SIZE, NULL);
+
+        const gchar *label = is_command ? "Run" : "Search online";
+        search_plugin_add_result(store, g_strdup_printf("%s: %s", label, query), NULL, query, pixbuf);
+        
+        g_strfreev(parts);
         if (pixbuf != NULL)
             g_object_unref(pixbuf);
     }
