@@ -10,6 +10,10 @@ A lightweight search plugin for the XFCE4 panel that allows you to quickly searc
 - **Configurable**: Customizable settings for popup size, appearance, and behavior
 - **Interactive Results**: Real-time search results displayed in a popup window
 
+## Screenshot
+
+![XFCE4 Search Plugin Example](example.png)
+
 ## Requirements
 
 ### Build Dependencies
